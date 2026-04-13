@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dashboard — BiblioSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a th:href="@{/}" class="nav-brand"><span class="brand-icon">📚</span><span class="brand-text">BiblioSystem</span></a>
+    <ul class="nav-links">
+        <li><a th:href="@{/livros}">Livros</a></li>
+        <li><a th:href="@{/usuarios}">Usuários</a></li>
+        <li><a th:href="@{/emprestimos}">Empréstimos</a></li>
+        <li><a th:href="@{/reservas}">Reservas</a></li>
+        <li><a th:href="@{/multas}">Multas</a></li>
+    </ul>
+    <div class="sidebar-footer">BIBLIOTECH v1.0</div>
+</nav>
+<main class="main-content">
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-error" th:text="${erro}"></div>
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Visão geral do sistema de biblioteca</p>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card stat-blue">
+            <div class="stat-icon">📖</div>
+            <div class="stat-info">
+                <span class="stat-number" th:text="${totalLivros}">0</span>
+                <span class="stat-label">Livros Cadastrados</span>
+            </div>
+        </div>
+        <div class="stat-card stat-green">
+            <div class="stat-icon">👤</div>
+            <div class="stat-info">
+                <span class="stat-number" th:text="${totalUsuarios}">0</span>
+                <span class="stat-label">Usuários</span>
+            </div>
+        </div>
+        <div class="stat-card stat-amber">
+            <div class="stat-icon">🔖</div>
+            <div class="stat-info">
+                <span class="stat-number" th:text="${totalEmprestimos}">0</span>
+                <span class="stat-label">Empréstimos Ativos</span>
+            </div>
+        </div>
+        <div class="stat-card stat-purple">
+            <div class="stat-icon">📌</div>
+            <div class="stat-info">
+                <span class="stat-number" th:text="${totalReservas}">0</span>
+                <span class="stat-label">Reservas Ativas</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">
+        <h2 class="section-title">Empréstimos Ativos</h2>
+        <a th:href="@{/emprestimos/novo}" class="btn btn-primary">+ Novo Empréstimo</a>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table" th:if="${not #lists.isEmpty(emprestimosRecentes)}">
+            <thead><tr><th>Usuário</th><th>Livro</th><th>Retirada</th><th>Prazo</th><th>Status</th><th>Ação</th></tr></thead>
+            <tbody>
+                <tr th:each="emp : ${emprestimosRecentes}">
+                    <td th:text="${emp.usuarioNome}">-</td>
+                    <td th:text="${emp.livroTitulo}">-</td>
+                    <td th:text="${emp.dataRetirada}">-</td>
+                    <td th:text="${emp.dataPrevista}">-</td>
+                    <td><span th:classappend="${emp.atrasado} ? 'badge badge-danger' : 'badge badge-success'" th:text="${emp.status}">ATIVO</span></td>
+                    <td>
+                        <form th:action="@{/emprestimos/devolver/{id}(id=${emp.id})}" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-sm btn-warning">Devolver</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:if="${#lists.isEmpty(emprestimosRecentes)}" class="empty-state">
+            <p>Nenhum empréstimo ativo no momento.</p>
+            <a th:href="@{/emprestimos/novo}" class="btn btn-primary">Registrar Empréstimo</a>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2 class="section-title">Ações Rápidas</h2>
+        <div class="actions-grid">
+            <a th:href="@{/livros/novo}" class="action-card"><span class="action-icon">📗</span><span>Adicionar Livro</span></a>
+            <a th:href="@{/usuarios/novo}" class="action-card"><span class="action-icon">👤</span><span>Cadastrar Usuário</span></a>
+            <a th:href="@{/emprestimos/novo}" class="action-card"><span class="action-icon">📤</span><span>Emprestar Livro</span></a>
+            <a th:href="@{/reservas/nova}" class="action-card"><span class="action-icon">📌</span><span>Nova Reserva</span></a>
+        </div>
+    </div>
+</main>
+<footer class="footer"><p>Sistema de Controle de Biblioteca &copy; 2024</p></footer>
+</body>
+</html>
