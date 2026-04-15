@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Multas — BiblioSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <a th:href="@{/}" class="sidebar-brand">
+        <div class="brand-logo">📚</div>
+        <div class="brand-label">
+            <span class="brand-name">BiblioSystem</span>
+            <span class="brand-sub">Biblioteca</span>
+        </div>
+    </a>
+    <span class="sidebar-section">Menu</span>
+    <ul class="sidebar-nav">
+        <li><a th:href="@{/livros}"><span class="nav-icon">📖</span>Livros</a></li>
+        <li><a th:href="@{/usuarios}"><span class="nav-icon">👥</span>Usuários</a></li>
+        <li><a th:href="@{/emprestimos}"><span class="nav-icon">📤</span>Empréstimos</a></li>
+        <li><a th:href="@{/reservas}"><span class="nav-icon">🔖</span>Reservas</a></li>
+        <li><a th:href="@{/multas}" class="active"><span class="nav-icon">⚠️</span>Multas</a></li>
+    </ul>
+    <div class="sidebar-footer">v1.0 &bull; MongoDB Atlas</div>
+</aside>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+<!-- TOPBAR -->
+<header class="topbar">
+    <span class="topbar-title">Multas</span>
+    <div class="topbar-actions">
+        <a th:href="@{/}" class="btn btn-ghost btn-sm">Dashboard</a>
+    </div>
+</header>
+
+<main class="main-content">
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-error" th:text="${erro}"></div>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Multas</h1>
+            <p class="page-subtitle">Multas geradas por atraso (R$ 2,50/dia)</p>
+        </div>
+    </div>
+    <div class="table-wrapper">
+        <table class="table" th:if="${not #lists.isEmpty(multas)}">
+            <thead><tr>
+                <th>Usuário</th><th>Livro</th><th>ID Empréstimo</th><th>Dias Atraso</th><th>Valor</th><th>Status</th><th>Ação</th>
+            </tr></thead>
+            <tbody>
+                <tr th:each="m : ${multas}">
+                    <td><strong th:text="${m.usuarioNome}">-</strong></td>
+                    <td th:text="${m.livroTitulo}">-</td>
+                    <td><code th:text="${#strings.abbreviate(m.emprestimoId, 12)}" style="color:var(--text-muted);font-size:.78rem">-</code></td>
+                    <td>
+                        <span class="badge badge-danger" th:text="${m.diasAtraso + ' dias'}">-</span>
+                    </td>
+                    <td>
+                        <strong th:text="'R$ ' + ${#numbers.formatDecimal(m.valor, 1, 2)}" style="color:var(--rose)">-</strong>
+                    </td>
+                    <td>
+                        <span th:classappend="${m.paga} ? 'badge badge-success' : 'badge badge-amber'"
+                              th:text="${m.paga} ? 'PAGA' : 'PENDENTE'">-</span>
+                    </td>
+                    <td>
+                        <form th:if="${!m.paga}"
+                              th:action="@{/multas/pagar/{id}(id=${m.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Confirmar quitação da multa?')">
+                            <button type="submit" class="btn btn-sm btn-secondary">Quitar</button>
+                        </form>
+                        <span th:if="${m.paga}" class="text-muted" style="font-size:.8rem">Quitada</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="empty-state" th:if="${#lists.isEmpty(multas)}">
+            <div class="empty-state-icon">✅</div>
+            <span>Nenhuma multa registrada.</span>
+        </div>
+    </div>
+
+</main>
+<footer class="footer"><p>Sistema de Controle de Biblioteca &copy; 2024</p></footer>
+</div>
+</body>
+</html>

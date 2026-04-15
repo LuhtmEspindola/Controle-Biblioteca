@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Usuário — BiblioSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <a th:href="@{/}" class="sidebar-brand">
+        <div class="brand-logo">📚</div>
+        <div class="brand-label">
+            <span class="brand-name">BiblioSystem</span>
+            <span class="brand-sub">Biblioteca</span>
+        </div>
+    </a>
+    <span class="sidebar-section">Menu</span>
+    <ul class="sidebar-nav">
+        <li><a th:href="@{/livros}"><span class="nav-icon">📖</span>Livros</a></li>
+        <li><a th:href="@{/usuarios}" class="active"><span class="nav-icon">👥</span>Usuários</a></li>
+        <li><a th:href="@{/emprestimos}"><span class="nav-icon">📤</span>Empréstimos</a></li>
+        <li><a th:href="@{/reservas}"><span class="nav-icon">🔖</span>Reservas</a></li>
+        <li><a th:href="@{/multas}"><span class="nav-icon">⚠️</span>Multas</a></li>
+    </ul>
+    <div class="sidebar-footer">v1.0 &bull; MongoDB Atlas</div>
+</aside>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+<!-- TOPBAR -->
+<header class="topbar">
+    <span class="topbar-title">Usuários</span>
+    <div class="topbar-actions">
+        <a th:href="@{/}" class="btn btn-ghost btn-sm">Dashboard</a>
+    </div>
+</header>
+
+<main class="main-content">
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-error" th:text="${erro}"></div>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title" th:text="${usuario.id != null} ? 'Editar Usuário' : 'Novo Usuário'">Usuário</h1>
+            <p class="page-subtitle">Preencha os dados do usuário</p>
+        </div>
+        <a th:href="@{/usuarios}" class="btn btn-ghost">← Voltar</a>
+    </div>
+    <div class="form-card">
+        <form th:action="@{/usuarios/salvar}" method="post" th:object="${usuario}">
+            <input type="hidden" th:field="*{id}"/>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nome">Nome *</label>
+                    <input type="text" id="nome" th:field="*{nome}" class="form-control" required placeholder="Nome completo"/>
+                </div>
+                <div class="form-group">
+                    <label for="matricula">Matrícula *</label>
+                    <input type="text" id="matricula" th:field="*{matricula}" class="form-control" required placeholder="Número de matrícula"/>
+                </div>
+                <div class="form-group">
+                    <label for="tipo">Tipo *</label>
+                    <select id="tipo" th:field="*{tipo}" class="form-control" required>
+                        <option value="">Selecione...</option>
+                        <option value="ALUNO">Aluno</option>
+                        <option value="PROFESSOR">Professor</option>
+                        <option value="FUNCIONARIO">Funcionário</option>
+                    </select>
+                </div>
+                <div class="form-group form-group-full">
+                    <label for="endereco">Endereço</label>
+                    <input type="text" id="endereco" th:field="*{endereco}" class="form-control" placeholder="Endereço completo"/>
+                </div>
+            </div>
+            <div class="form-actions">
+                <a th:href="@{/usuarios}" class="btn btn-ghost">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Salvar Usuário</button>
+            </div>
+        </form>
+    </div>
+
+</main>
+<footer class="footer"><p>Sistema de Controle de Biblioteca &copy; 2024</p></footer>
+</div>
+</body>
+</html>

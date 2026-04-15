@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Empréstimos — BiblioSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <a th:href="@{/}" class="sidebar-brand">
+        <div class="brand-logo">📚</div>
+        <div class="brand-label">
+            <span class="brand-name">BiblioSystem</span>
+            <span class="brand-sub">Biblioteca</span>
+        </div>
+    </a>
+    <span class="sidebar-section">Menu</span>
+    <ul class="sidebar-nav">
+        <li><a th:href="@{/livros}"><span class="nav-icon">📖</span>Livros</a></li>
+        <li><a th:href="@{/usuarios}"><span class="nav-icon">👥</span>Usuários</a></li>
+        <li><a th:href="@{/emprestimos}" class="active"><span class="nav-icon">📤</span>Empréstimos</a></li>
+        <li><a th:href="@{/reservas}"><span class="nav-icon">🔖</span>Reservas</a></li>
+        <li><a th:href="@{/multas}"><span class="nav-icon">⚠️</span>Multas</a></li>
+    </ul>
+    <div class="sidebar-footer">v1.0 &bull; MongoDB Atlas</div>
+</aside>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+<!-- TOPBAR -->
+<header class="topbar">
+    <span class="topbar-title">Empréstimos</span>
+    <div class="topbar-actions">
+        <a th:href="@{/}" class="btn btn-ghost btn-sm">Dashboard</a>
+    </div>
+</header>
+
+<main class="main-content">
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-error" th:text="${erro}"></div>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Empréstimos</h1>
+            <p class="page-subtitle">Controle de empréstimos e devoluções</p>
+        </div>
+        <a th:href="@{/emprestimos/novo}" class="btn btn-primary">+ Novo Empréstimo</a>
+    </div>
+    <div class="table-wrapper">
+        <table class="table" th:if="${not #lists.isEmpty(emprestimos)}">
+            <thead><tr>
+                <th>Usuário</th><th>Livro</th><th>Data Retirada</th><th>Prazo</th><th>Devolução</th><th>Status</th><th>Ações</th>
+            </tr></thead>
+            <tbody>
+                <tr th:each="emp : ${emprestimos}"
+                    th:classappend="${emp.status == 'ATRASADO'} ? 'row-danger'">
+                    <td><strong th:text="${emp.usuarioNome}">-</strong></td>
+                    <td th:text="${emp.livroTitulo}">-</td>
+                    <td th:text="${emp.dataRetirada}">-</td>
+                    <td th:text="${emp.dataPrevista}">-</td>
+                    <td th:text="${emp.dataDevolucao != null} ? ${emp.dataDevolucao} : '—'">-</td>
+                    <td>
+                        <span th:text="${emp.status}"
+                              th:classappend="${emp.status == 'ATIVO'} ? 'badge badge-blue' :
+                                             (${emp.status == 'FINALIZADO'} ? 'badge badge-success' : 'badge badge-danger')">-</span>
+                    </td>
+                    <td class="actions-cell">
+                        <form th:if="${emp.status == 'ATIVO'}"
+                              th:action="@{/emprestimos/devolver/{id}(id=${emp.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Confirmar devolução?')">
+                            <button type="submit" class="btn btn-sm btn-secondary">Devolver</button>
+                        </form>
+                        <form th:if="${emp.status == 'ATIVO'}"
+                              th:action="@{/emprestimos/renovar/{id}(id=${emp.id})}" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-sm btn-warning">Renovar</button>
+                        </form>
+                        <span th:if="${emp.status != 'ATIVO'}" class="text-muted" style="font-size:.8rem" th:text="${emp.status}">-</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="empty-state" th:if="${#lists.isEmpty(emprestimos)}">
+            <div class="empty-state-icon">📤</div>
+            <span>Nenhum empréstimo registrado.</span>
+        </div>
+    </div>
+
+</main>
+<footer class="footer"><p>Sistema de Controle de Biblioteca &copy; 2024</p></footer>
+</div>
+</body>
+</html>

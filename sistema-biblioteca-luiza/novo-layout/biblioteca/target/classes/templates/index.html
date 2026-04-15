@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dashboard — BiblioSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <a th:href="@{/}" class="sidebar-brand">
+        <div class="brand-logo">📚</div>
+        <div class="brand-label">
+            <span class="brand-name">BiblioSystem</span>
+            <span class="brand-sub">Biblioteca</span>
+        </div>
+    </a>
+    <span class="sidebar-section">Menu</span>
+    <ul class="sidebar-nav">
+        <li><a th:href="@{/livros}"><span class="nav-icon">📖</span>Livros</a></li>
+        <li><a th:href="@{/usuarios}"><span class="nav-icon">👥</span>Usuários</a></li>
+        <li><a th:href="@{/emprestimos}"><span class="nav-icon">📤</span>Empréstimos</a></li>
+        <li><a th:href="@{/reservas}"><span class="nav-icon">🔖</span>Reservas</a></li>
+        <li><a th:href="@{/multas}"><span class="nav-icon">⚠️</span>Multas</a></li>
+    </ul>
+    <div class="sidebar-footer">v1.0 &bull; MongoDB Atlas</div>
+</aside>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+<!-- TOPBAR -->
+<header class="topbar">
+    <span class="topbar-title">Dashboard</span>
+    <div class="topbar-actions">
+        <a th:href="@{/}" class="btn btn-ghost btn-sm">Dashboard</a>
+    </div>
+</header>
+
+<main class="main-content">
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-error" th:text="${erro}"></div>
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Visão geral do sistema de biblioteca</p>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card stat-blue">
+            <div class="stat-top">
+                <div class="stat-icon-wrap">📖</div>
+            </div>
+            <div>
+                <div class="stat-number" th:text="${totalLivros}">0</div>
+                <div class="stat-label">Livros Cadastrados</div>
+            </div>
+        </div>
+        <div class="stat-card stat-green">
+            <div class="stat-top">
+                <div class="stat-icon-wrap">👥</div>
+            </div>
+            <div>
+                <div class="stat-number" th:text="${totalUsuarios}">0</div>
+                <div class="stat-label">Usuários</div>
+            </div>
+        </div>
+        <div class="stat-card stat-amber">
+            <div class="stat-top">
+                <div class="stat-icon-wrap">📤</div>
+            </div>
+            <div>
+                <div class="stat-number" th:text="${totalEmprestimos}">0</div>
+                <div class="stat-label">Empréstimos Ativos</div>
+            </div>
+        </div>
+        <div class="stat-card stat-purple">
+            <div class="stat-top">
+                <div class="stat-icon-wrap">🔖</div>
+            </div>
+            <div>
+                <div class="stat-number" th:text="${totalReservas}">0</div>
+                <div class="stat-label">Reservas Ativas</div>
+            </div>
+        </div>
+        <div class="stat-card stat-rose">
+            <div class="stat-top">
+                <div class="stat-icon-wrap">⚠️</div>
+            </div>
+            <div>
+                <div class="stat-number" th:text="${totalMultas}">0</div>
+                <div class="stat-label">Multas Pendentes</div>
+            </div>
+        </div>
+        <div class="stat-card stat-cyan">
+            <div class="stat-top">
+                <div class="stat-icon-wrap">✅</div>
+            </div>
+            <div>
+                <div class="stat-number" th:text="${livrosDisponiveis}">0</div>
+                <div class="stat-label">Livros Disponíveis</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="quick-actions">
+        <div class="section-header">
+            <span class="section-title">Ações Rápidas</span>
+        </div>
+        <div class="actions-grid">
+            <a th:href="@{/livros/novo}" class="action-card">
+                <div class="action-icon">➕</div>
+                Novo Livro
+            </a>
+            <a th:href="@{/usuarios/novo}" class="action-card">
+                <div class="action-icon">👤</div>
+                Novo Usuário
+            </a>
+            <a th:href="@{/emprestimos/novo}" class="action-card">
+                <div class="action-icon">📤</div>
+                Novo Empréstimo
+            </a>
+            <a th:href="@{/reservas/nova}" class="action-card">
+                <div class="action-icon">🔖</div>
+                Nova Reserva
+            </a>
+            <a th:href="@{/multas}" class="action-card">
+                <div class="action-icon">⚠️</div>
+                Ver Multas
+            </a>
+        </div>
+    </div>
+
+</main>
+<footer class="footer"><p>Sistema de Controle de Biblioteca &copy; 2024</p></footer>
+</div><!-- end page-wrapper -->
+</body>
+</html>

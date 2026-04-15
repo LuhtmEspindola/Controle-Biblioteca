@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Reservas — BiblioSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <a th:href="@{/}" class="sidebar-brand">
+        <div class="brand-logo">📚</div>
+        <div class="brand-label">
+            <span class="brand-name">BiblioSystem</span>
+            <span class="brand-sub">Biblioteca</span>
+        </div>
+    </a>
+    <span class="sidebar-section">Menu</span>
+    <ul class="sidebar-nav">
+        <li><a th:href="@{/livros}"><span class="nav-icon">📖</span>Livros</a></li>
+        <li><a th:href="@{/usuarios}"><span class="nav-icon">👥</span>Usuários</a></li>
+        <li><a th:href="@{/emprestimos}"><span class="nav-icon">📤</span>Empréstimos</a></li>
+        <li><a th:href="@{/reservas}" class="active"><span class="nav-icon">🔖</span>Reservas</a></li>
+        <li><a th:href="@{/multas}"><span class="nav-icon">⚠️</span>Multas</a></li>
+    </ul>
+    <div class="sidebar-footer">v1.0 &bull; MongoDB Atlas</div>
+</aside>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+<!-- TOPBAR -->
+<header class="topbar">
+    <span class="topbar-title">Reservas</span>
+    <div class="topbar-actions">
+        <a th:href="@{/}" class="btn btn-ghost btn-sm">Dashboard</a>
+    </div>
+</header>
+
+<main class="main-content">
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-error" th:text="${erro}"></div>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Reservas</h1>
+            <p class="page-subtitle">Reservas válidas por 7 dias</p>
+        </div>
+        <a th:href="@{/reservas/nova}" class="btn btn-primary">+ Nova Reserva</a>
+    </div>
+    <div class="table-wrapper">
+        <table class="table" th:if="${not #lists.isEmpty(reservas)}">
+            <thead><tr>
+                <th>Usuário</th><th>Livro</th><th>Data Solicitação</th><th>Expiração</th><th>Status</th><th>Ações</th>
+            </tr></thead>
+            <tbody>
+                <tr th:each="r : ${reservas}">
+                    <td><strong th:text="${r.usuarioNome}">-</strong></td>
+                    <td th:text="${r.livroTitulo}">-</td>
+                    <td th:text="${r.dataSolicitacao}">-</td>
+                    <td th:text="${r.dataExpiracao}">-</td>
+                    <td>
+                        <span th:text="${r.status}"
+                              th:classappend="${r.status == 'ATIVA'} ? 'badge badge-success' : 'badge badge-danger'">-</span>
+                    </td>
+                    <td class="actions-cell">
+                        <form th:if="${r.status == 'ATIVA'}"
+                              th:action="@{/reservas/cancelar/{id}(id=${r.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Cancelar reserva?')">
+                            <button type="submit" class="btn btn-sm btn-danger">Cancelar</button>
+                        </form>
+                        <span th:if="${r.status != 'ATIVA'}" class="text-muted" style="font-size:.8rem" th:text="${r.status}">-</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="empty-state" th:if="${#lists.isEmpty(reservas)}">
+            <div class="empty-state-icon">🔖</div>
+            <span>Nenhuma reserva registrada.</span>
+        </div>
+    </div>
+
+</main>
+<footer class="footer"><p>Sistema de Controle de Biblioteca &copy; 2024</p></footer>
+</div>
+</body>
+</html>

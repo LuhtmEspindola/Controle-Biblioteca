@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Usuários — BiblioSystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <a th:href="@{/}" class="sidebar-brand">
+        <div class="brand-logo">📚</div>
+        <div class="brand-label">
+            <span class="brand-name">BiblioSystem</span>
+            <span class="brand-sub">Biblioteca</span>
+        </div>
+    </a>
+    <span class="sidebar-section">Menu</span>
+    <ul class="sidebar-nav">
+        <li><a th:href="@{/livros}"><span class="nav-icon">📖</span>Livros</a></li>
+        <li><a th:href="@{/usuarios}" class="active"><span class="nav-icon">👥</span>Usuários</a></li>
+        <li><a th:href="@{/emprestimos}"><span class="nav-icon">📤</span>Empréstimos</a></li>
+        <li><a th:href="@{/reservas}"><span class="nav-icon">🔖</span>Reservas</a></li>
+        <li><a th:href="@{/multas}"><span class="nav-icon">⚠️</span>Multas</a></li>
+    </ul>
+    <div class="sidebar-footer">v1.0 &bull; MongoDB Atlas</div>
+</aside>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+<!-- TOPBAR -->
+<header class="topbar">
+    <span class="topbar-title">Usuários</span>
+    <div class="topbar-actions">
+        <a th:href="@{/}" class="btn btn-ghost btn-sm">Dashboard</a>
+    </div>
+</header>
+
+<main class="main-content">
+    <div th:if="${mensagem}" class="alert alert-success" th:text="${mensagem}"></div>
+    <div th:if="${erro}" class="alert alert-error" th:text="${erro}"></div>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Usuários</h1>
+            <p class="page-subtitle">Alunos, professores e funcionários</p>
+        </div>
+        <a th:href="@{/usuarios/novo}" class="btn btn-primary">+ Novo Usuário</a>
+    </div>
+    <div class="table-wrapper">
+        <table class="table" th:if="${not #lists.isEmpty(usuarios)}">
+            <thead><tr>
+                <th>Nome</th><th>Matrícula</th><th>Tipo</th><th>Endereço</th><th>Ações</th>
+            </tr></thead>
+            <tbody>
+                <tr th:each="u : ${usuarios}">
+                    <td><strong th:text="${u.nome}">-</strong></td>
+                    <td><code th:text="${u.matricula}" style="color:var(--text-muted);font-size:.82rem">-</code></td>
+                    <td>
+                        <span th:text="${u.tipo}"
+                              th:classappend="${u.tipo == 'ALUNO'} ? 'badge badge-blue' : (${u.tipo == 'PROFESSOR'} ? 'badge badge-green' : 'badge badge-amber')">-</span>
+                    </td>
+                    <td th:text="${u.endereco}">-</td>
+                    <td class="actions-cell">
+                        <a th:href="@{/usuarios/editar/{id}(id=${u.id})}" class="btn btn-sm btn-secondary">Editar</a>
+                        <form th:action="@{/usuarios/remover/{id}(id=${u.id})}" method="post" style="display:inline"
+                              onsubmit="return confirm('Confirmar remoção?')">
+                            <button type="submit" class="btn btn-sm btn-danger">Remover</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="empty-state" th:if="${#lists.isEmpty(usuarios)}">
+            <div class="empty-state-icon">👥</div>
+            <span>Nenhum usuário cadastrado.</span>
+        </div>
+    </div>
+
+</main>
+<footer class="footer"><p>Sistema de Controle de Biblioteca &copy; 2024</p></footer>
+</div>
+</body>
+</html>

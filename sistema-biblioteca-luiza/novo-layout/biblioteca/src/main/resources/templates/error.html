@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Erro — BiblioSystem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg)">
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem;max-width:500px;width:90%;text-align:center">
+    <div style="font-size:3rem;margin-bottom:1rem">⚠️</div>
+    <h1 style="font-size:1.4rem;font-weight:800;color:var(--rose);margin-bottom:.5rem">Ocorreu um erro</h1>
+    <p th:text="${mensagem}" style="color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem">Erro interno do servidor.</p>
+    <a href="/" class="btn btn-primary">← Voltar ao Dashboard</a>
+</div>
+</body>
+</html>
